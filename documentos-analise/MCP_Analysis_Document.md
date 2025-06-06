@@ -133,32 +133,109 @@ Este documento apresenta uma análise detalhada de todos os MCPs disponíveis, o
 - **`reset_branch`**: Reset de migrações
 - **`rebase_branch`**: Rebase em produção
 
+## 6. CLICKUP MCP - GESTÃO DE PROJETOS E PRODUTIVIDADE
+
+### Estrutura Organizacional
+- **`get_workspace_hierarchy`**: Obtém hierarquia completa (espaços, pastas, listas)
+
+### Gestão de Tarefas Individuais
+- **`create_task`**: Cria tarefas individuais com campos customizados
+- **`get_task`**: Obtém detalhes de tarefas (por ID ou nome)
+- **`update_task`**: Atualiza propriedades de tarefas
+- **`move_task`**: Move tarefas entre listas
+- **`duplicate_task`**: Duplica tarefas existentes
+- **`delete_task`**: Remove tarefas permanentemente
+
+### Operações em Massa
+- **`create_bulk_tasks`**: Cria múltiplas tarefas simultaneamente
+- **`update_bulk_tasks`**: Atualiza múltiplas tarefas em lote
+- **`move_bulk_tasks`**: Move múltiplas tarefas entre listas
+- **`delete_bulk_tasks`**: Remove múltiplas tarefas permanentemente
+
+### Busca e Filtragem Avançada
+- **`get_workspace_tasks`**: Busca tarefas em todo workspace com filtros avançados (tags, status, assignees, datas)
+
+### Comentários e Colaboração
+- **`get_task_comments`**: Obtém comentários de tarefas
+- **`create_task_comment`**: Adiciona comentários a tarefas
+
+### Anexos e Arquivos
+- **`attach_task_file`**: Anexa arquivos às tarefas (base64, URL, ou caminho local)
+
+### Gestão de Tempo
+- **`get_task_time_entries`**: Obtém registros de tempo de tarefas
+- **`start_time_tracking`**: Inicia cronômetro de tempo
+- **`stop_time_tracking`**: Para cronômetro atual
+- **`add_time_entry`**: Adiciona entrada manual de tempo
+- **`delete_time_entry`**: Remove registros de tempo
+- **`get_current_time_entry`**: Verifica cronômetro ativo
+
+### Gestão de Estrutura
+- **`create_list`**: Cria listas em espaços
+- **`create_list_in_folder`**: Cria listas dentro de pastas
+- **`get_list`**: Obtém detalhes de listas
+- **`update_list`**: Atualiza propriedades de listas
+- **`delete_list`**: Remove listas permanentemente
+
+### Gestão de Pastas
+- **`create_folder`**: Cria pastas em espaços
+- **`get_folder`**: Obtém detalhes de pastas
+- **`update_folder`**: Atualiza propriedades de pastas
+- **`delete_folder`**: Remove pastas e todo conteúdo
+
+### Sistema de Tags
+- **`get_space_tags`**: Lista tags disponíveis por espaço
+- **`add_tag_to_task`**: Adiciona tags a tarefas
+- **`remove_tag_from_task`**: Remove tags de tarefas
+
+### Casos de Uso do ClickUp MCP
+- **Automação de Workflows**: Criação automática de tarefas baseada em eventos
+- **Integração com Desenvolvimento**: Sincronização entre código e tasks de projeto
+- **Relatórios Automatizados**: Extração de dados para análises e dashboards
+- **Gestão de Tempo**: Automação de tracking de tempo para projetos
+- **Migração de Dados**: Transferência em massa de tarefas entre projetos
+- **Monitoramento de Produtividade**: Análise de métricas de equipe
+
 ## SÍNTESE ESTRATÉGICA
 
 ### Pontos Fortes dos MCPs
-1. **Cobertura Completa**: Desde desenvolvimento local até deployment em produção
-2. **Integração Nativa**: MCPs nativos para plataformas essenciais
+1. **Cobertura Completa**: Desde desenvolvimento local até deployment e gestão de projetos
+2. **Integração Nativa**: MCPs nativos para plataformas essenciais (Supabase, GitHub, ClickUp)
 3. **Automação Avançada**: Capacidades de automação de workflows complexos
 4. **Flexibilidade**: Desde operações simples até orquestrações complexas
+5. **Gestão de Produtividade**: Controle completo de projetos e time tracking
 
 ### Casos de Uso Integrados
-1. **Desenvolvimento Full-Stack**: Código local → GitHub → Supabase
-2. **Pesquisa e Documentação**: Web scraping → Context7 → Implementação
-3. **CI/CD Automatizado**: GitHub Actions → Supabase Deployment
-4. **Análise de Dados**: Web scraping → Processamento → Supabase Storage
+1. **Desenvolvimento Full-Stack**: Código local → GitHub → Supabase → ClickUp tracking
+2. **Pesquisa e Documentação**: Web scraping → Context7 → Implementação → Task management
+3. **CI/CD Automatizado**: GitHub Actions → Supabase Deployment → ClickUp notifications
+4. **Análise de Dados**: Web scraping → Processamento → Supabase Storage → ClickUp reporting
+5. **Project Management**: ClickUp tasks ↔ GitHub issues ↔ Supabase data
 
 ### Recomendações de Uso
 1. **Para Projetos Supabase**: Sempre usar MCP nativo do Supabase
 2. **Para Pesquisa**: Combinar Firecrawl + Context7 + Web Search
-3. **Para Colaboração**: GitHub MCP para gestão completa de repositórios
-4. **Para Desenvolvimento**: Ferramentas básicas + MCPs específicos
+3. **Para Colaboração**: GitHub MCP + ClickUp MCP para gestão completa
+4. **Para Desenvolvimento**: Ferramentas básicas + MCPs específicos + ClickUp tracking
+5. **Para Produtividade**: ClickUp MCP para automação de workflows de projeto
+
+### Fluxos de Trabalho Integrados
+1. **Feature Development**:
+   - ClickUp task creation → GitHub branch → Development → PR → Supabase deployment → ClickUp completion
+2. **Bug Tracking**:
+   - ClickUp bug report → GitHub issue → Fix development → Testing → Resolution tracking
+3. **Research Projects**:
+   - Firecrawl data collection → Analysis → Supabase storage → ClickUp milestone tracking
+4. **Team Productivity**:
+   - ClickUp time tracking → GitHub commits correlation → Performance analytics
 
 ### Limitações Identificadas
 1. **Dependência de Conectividade**: MCPs externos requerem internet
 2. **Rate Limits**: APIs podem ter limitações de uso
 3. **Complexidade**: Requer entendimento profundo para uso otimizado
-4. **Custos**: Alguns serviços (Supabase, Firecrawl) têm custos associados
+4. **Custos**: Alguns serviços (Supabase, Firecrawl, ClickUp) têm custos associados
+5. **Sincronização**: Manter consistência entre múltiplas plataformas
 
 ## CONCLUSÃO
 
-Os MCPs disponíveis formam um ecossistema completo e integrado para desenvolvimento moderno, oferecendo desde ferramentas básicas até integrações avançadas com plataformas cloud. A combinação desses protocolos permite automação de workflows complexos e desenvolvimento acelerado de aplicações full-stack. 
+Os MCPs disponíveis formam um ecossistema completo e integrado para desenvolvimento moderno e gestão de projetos, oferecendo desde ferramentas básicas até integrações avançadas com plataformas cloud e de produtividade. A adição do ClickUp MCP complementa perfeitamente o conjunto, permitindo automação de workflows completos que abrangem desde o planejamento até a execução e monitoramento de projetos. A combinação desses protocolos permite automação de workflows complexos e desenvolvimento acelerado de aplicações full-stack com gestão integrada de produtividade. 

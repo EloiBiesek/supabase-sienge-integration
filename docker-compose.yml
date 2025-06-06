@@ -1,0 +1,97 @@
+version: '3.8'
+
+services:
+  # PostgreSQL local para desenvolvimento
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: sienge_integration_dev
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/setup/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - sienge_network
+
+  # Redis para cache e filas
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - sienge_network
+
+  # API principal do projeto
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/sienge_integration_dev
+      - REDIS_URL=redis://redis:6379
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
+      - SIENGE_API_URL=${SIENGE_API_URL}
+      - SIENGE_API_KEY=${SIENGE_API_KEY}
+    volumes:
+      - .:/app
+      - /app/__pycache__
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - sienge_network
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
+
+  # Worker Celery para processamento assíncrono
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/sienge_integration_dev
+      - REDIS_URL=redis://redis:6379
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_ANON_KEY=${SUPABASE_ANON_KEY}
+      - SIENGE_API_URL=${SIENGE_API_URL}
+      - SIENGE_API_KEY=${SIENGE_API_KEY}
+    volumes:
+      - .:/app
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - sienge_network
+    command: celery -A src.worker worker --loglevel=info
+
+  # Flower para monitoramento do Celery
+  flower:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "5555:5555"
+    environment:
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+    networks:
+      - sienge_network
+    command: celery -A src.worker flower --port=5555
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  sienge_network:
+    driver: bridge 
