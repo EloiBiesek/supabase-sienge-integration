@@ -5,10 +5,10 @@
 
 ## 📋 SUMÁRIO EXECUTIVO
 
-Este documento apresenta um plano estratégico para integração completa entre o sistema ERP SIENGE e a plataforma Supabase, aproveitando as capacidades avançadas dos MCPs disponíveis para automação, desenvolvimento ágil e deploy contínuo.
+Este documento apresenta um plano estratégico para integração unidirecional do sistema ERP SIENGE para a plataforma Supabase, aproveitando as capacidades avançadas dos MCPs disponíveis para automação, desenvolvimento ágil e deploy contínuo. O fluxo de dados é exclusivamente SIENGE → Supabase (somente leitura).
 
 ### 🎯 Objetivos Principais
-- **Sincronização Bidirecional**: Dados entre SIENGE e Supabase
+- **Sincronização Unidirecional**: Dados do SIENGE para Supabase (apenas leitura)
 - **Automação Completa**: Workflows de ETL e processamento
 - **Monitoramento em Tempo Real**: Logs, alertas e métricas
 - **Escalabilidade**: Arquitetura preparada para crescimento
@@ -21,21 +21,23 @@ Este documento apresenta um plano estratégico para integração completa entre 
 ### Componentes Principais
 
 ```
-SIENGE API ←→ MIDDLEWARE (Python/Deno) ←→ SUPABASE
-     ↓              ↓                        ↓
-   ERP Data    Processing Layer         Cloud Database
-               - ETL Scripts            - PostgreSQL
-               - Validation             - Real-time APIs
-               - Transformation         - Edge Functions
-               - Error Handling         - Auth & Security
+SIENGE API → MIDDLEWARE (Python/Deno) → SUPABASE
+     ↓              ↓                       ↓
+   ERP Data    Processing Layer       Cloud Database
+               - ETL Scripts          - PostgreSQL
+               - Validation           - Real-time APIs
+               - Transformation       - Edge Functions
+               - Error Handling       - Auth & Security
 ```
 
 ### Stack Tecnológica
-- **Backend**: Supabase (PostgreSQL + Edge Functions)
-- **Middleware**: Python Scripts + Deno Edge Functions
+- **Backend**: Supabase (PostgreSQL + Edge Functions) - **SOMENTE RECEBE dados**
+- **Middleware**: Python Scripts + Deno Edge Functions - **Extração/Transformação**
 - **Controle de Versão**: GitHub com MCPs
 - **Automação**: MCPs nativos do Supabase
 - **Monitoramento**: Logs do Supabase + Alertas customizados
+
+> **⚠️ IMPORTANTE**: Integração é **UNIDIRECIONAL** - SIENGE → Supabase. O Supabase **NUNCA** modifica dados no SIENGE.
 
 ---
 
@@ -324,7 +326,7 @@ CREATE TABLE sienge.sync_log (
 
 ## 🔄 ARQUITETURA DE SINCRONIZAÇÃO
 
-### Fluxo de Dados
+### Fluxo de Dados (Unidirecional: SIENGE → Supabase)
 ```mermaid
 graph TD
     A[SIENGE API] --> B[Python Extractor]
@@ -340,24 +342,27 @@ graph TD
     
     J[GitHub Actions] --> B
     K[Supabase Branches] --> E
+    
+    note1[Fluxo apenas SIENGE → Supabase]
+    note2[Supabase não altera dados no SIENGE]
 ```
 
-### Estratégias de Sincronização
+### Estratégias de Sincronização (SIENGE → Supabase)
 
 1. **Full Sync (Inicial)**
-   - Carga completa de dados históricos
-   - Validação de integridade
-   - Criação de baselines
+   - Carga completa de dados históricos do SIENGE
+   - Validação de integridade no Supabase
+   - Criação de baselines de referência
 
 2. **Incremental Sync (Contínua)**
-   - Baseada em timestamps
-   - Identificação de mudanças
-   - Processamento em lotes
+   - Baseada em timestamps do SIENGE
+   - Identificação de mudanças no ERP
+   - Processamento em lotes no Supabase
 
 3. **Real-time Sync (Futuro)**
-   - Webhooks do SIENGE
-   - Processamento imediato
-   - Notificações em tempo real
+   - Webhooks do SIENGE (se disponível)
+   - Processamento imediato no Supabase
+   - Notificações de mudanças em tempo real
 
 ---
 
